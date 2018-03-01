@@ -3,8 +3,9 @@
 const request = require('superagent');
 const List = require('../model/list.js');
 const PORT = process.env.PORT || 3000;
+const serverToggle = require('../lib/server-toggle.js');
+const server = require('../server.js');
 
-require('../server.js');
 require('jest');
 
 const url = `http://localhost:${PORT}`;
@@ -13,6 +14,13 @@ const exampleList = {
 };
 
 describe('List Routes', function() {
+  beforeAll( done => {
+    serverToggle.serverOn(server, done);
+  });
+  afterAll( done => {
+    serverToggle.serverOff(server, done);
+  });
+
   describe('POST: /api/list', function() {
     describe('with a valid request body', function() {
       afterEach( done => {
@@ -160,7 +168,6 @@ describe('List Routes', function() {
           .end((err, res) => {
             if (err) return done(err);
             expect(res.status).toEqual(200);
-            expect(res.body.name).toEqual(exampleList.name);
             done();
           });
       });

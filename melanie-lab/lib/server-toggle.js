@@ -1,6 +1,7 @@
 'use strict';
 
 const debug = require('debug')('recipe:server-toggle');
+const mongoose = require('mongoose');
 
 module.exports = exports = {};
 
@@ -21,6 +22,7 @@ exports.serverOff = function(server, done) {
     server.close( err => {
       if (err) return done(err);
       server.isRunning = false;
+      mongoose.connection.close()
       debug('server off');
       done();
     });

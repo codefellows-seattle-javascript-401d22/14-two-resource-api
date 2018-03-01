@@ -11,6 +11,7 @@ listRouter.get('/api/list/:listId', function(req, res, next) {
   debug('GET: /api/list/:listId');
 
   List.findById(req.params.listId)
+    .populate('recipes')
     .then( list => res.json(list))
     .catch( err => {
       createError(404, err.message);
@@ -40,8 +41,8 @@ listRouter.put('/api/list/:listId', jsonParser, function(req, res, next) {
   List.findByIdAndUpdate(req.params.listId, req.body, {new: true})
     .then( list => res.json(list))
     .catch( err => {
-      createError(404, err.message);
-      next();
+      if (err.name === 'ValidationError') return next(err);
+      next(createError(404, err.message));
     });
 });
 
@@ -49,6 +50,6 @@ listRouter.delete('/api/list/:listId', function(req, res, next) {
   debug('DELETE: /api/list/:listId');
 
   List.findByIdAndRemove(req.params.listId)
-    .then( list => res.json(list))
-    .catch(next);
+    .then( () => res.status(200).send())
+    .catch( err => next(createError(404, err.message)));
 });
