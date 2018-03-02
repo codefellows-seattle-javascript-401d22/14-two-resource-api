@@ -30,6 +30,44 @@ describe('Recipe Routes', function() {
     serverToggle.serverOff(server, done);
   });
 
+  describe('GET: /api/recipe/:recipeId', function() {
+    describe('with a valid body', function() {
+      beforeEach( done => {
+        new List(exampleList).save()
+          .then( list => {
+            exampleRecipe.listId = list._id;
+          })
+          .then( () => {
+            new Recipe(exampleRecipe).save()
+              .then( recipe => {
+                this.tempRecipe = recipe;
+                done();
+              })
+              .catch(done);
+          })
+          .catch(done);
+      });
+      afterEach( done => {
+        if (this.tempRecipe) {
+          List.remove({})
+            .then( () => done())
+            .catch(done);
+          return;
+        }
+        done();
+      });
+      it('should return a recipe', done => {
+        request.get(`${url}/api/recipe/${this.tempRecipe._id}`)
+          .end((err, res) => {
+            if (err) return done(err);
+            expect(res.status).toEqual(200);
+            expect(res.body.name).toEqual(exampleRecipe.name);
+            done();
+          });
+      });
+    });
+  });
+
   describe('POST: /api/list/:listId/recipe', function() {
     describe('with a valid list id & recipe body', () => {
       beforeEach( done => {
@@ -48,7 +86,7 @@ describe('Recipe Routes', function() {
           .then( () => done())
           .catch(done);
       });
-      it.only('should return a recipe', done => {
+      it('should return a recipe', done => {
         request.post(`${url}/api/list/${this.tempList._id}/recipe`)
           .send(exampleRecipe)
           .end((err, res) => {
