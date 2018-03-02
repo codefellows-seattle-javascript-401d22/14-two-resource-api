@@ -27,3 +27,27 @@ recipeRouter.post('/api/list/:listId/recipe', jsonParser, function(req, res, nex
     .then( recipe => res.json(recipe))
     .catch( err => next(err));
 });
+
+recipeRouter.put('/api/recipe/:recipeId', jsonParser, function(req, res, next) {
+
+  if (!req.body.name) next(createError(400, 'Bad request'));
+
+  Recipe.findByIdAndUpdate(req.params.recipeId, req.body, {new: true})
+    .then( recipe => res.json(recipe))
+    .catch( err => {
+      if (err.name === 'ValidationError') return next(err);
+      next(createError(404, err.message));
+    });
+});
+
+recipeRouter.delete('/api/recipe/:recipeId', function(req, res, next) {
+  debug('DELETE: /api/recipe/:recipeId');
+
+  Recipe.findByIdAndRemove(req.params.recipeId)
+    .populate('recipes')
+    .then( () => res.status(200).send())
+    .catch( err => {
+      createError(404, err.message);
+      next();
+    });
+});
