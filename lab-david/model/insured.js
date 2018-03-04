@@ -28,6 +28,18 @@ Insured.findByIdAndAddLifePolicy = function(id, lifepolicy){
       this.tempInsured.lifepolicies.push(lifepolicy._id);
       this.tempLifePolicy = lifepolicy;
       return this.tempLifePolicy.save();
-    }).then( () => { this.tempInsured})
+    }).then( () => this.tempInsured)
     .catch( err => Promise.reject(createError(404, err.message)));
+};
+
+Insured.findByIdAndRemoveLifePolicy = function(insuredId, lifepolicyId){
+  debug('findByIdAndRemoveLifePolicy');
+
+  return Insured.findById(insuredId)
+    .then( insured => {
+      this.tempInsured = insured;
+      let index = this.tempInsured.lifepolicies.indexOf(lifepolicyId);
+      this.tempInsured.lifepolicies.splice(index, 1);
+      return this.tempInsured.save();
+    }).catch( err => Promise.reject(createError(404, err.message)));
 };
