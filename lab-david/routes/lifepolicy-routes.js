@@ -2,6 +2,7 @@
 
 const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
+const createError = require('http-errors');
 const debug = require('debug')('insurance:lifepolicy-routes');
 const Insured = require('../model/insured.js');
 const LifePolicy = require('../model/lifepolicy.js');
