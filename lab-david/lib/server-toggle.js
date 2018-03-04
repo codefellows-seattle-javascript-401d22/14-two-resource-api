@@ -1,12 +1,13 @@
 'use strict';
 
 const debug = require('debug')('insurance:server-toggle');
+const PORT = process.env.PORT || 3000;
 
 module.exports = exports = {};
 
 exports.serverOn = function(server, done){
   if(!server.isRunning){
-    server.listen(process.env.PORT, () => {
+    server.listen(PORT, () => {
       server.isRunning = true;
       debug('server up!');
       done();
