@@ -15,15 +15,21 @@ lifepolicyRouter.get('/api/lifepolicy/:lifepolicyId', (req, res, next) => {
   LifePolicy.findById(req.params.lifepolicyId)
     .populate('illustrations')
     .then( lifepolicy => res.json(lifepolicy))
-    .catch(next);
+    .catch( err => {
+      err = createError(404, err.message);
+      next(err);
+    });
 });
 
 lifepolicyRouter.post('/api/insured/:insuredId/lifepolicy', jsonParser, (req, res, next) => {
   debug('POST: /api/insured/:insuredId/lifepolicy');
 
-  Insured.findByIdAndAddLifePolicy(req.pararms.insuredId, req.body)
+  Insured.findByIdAndAddLifePolicy(req.params.insuredId, req.body)
     .then( lifepolicy => res.json(lifepolicy))
-    .catch(next);
+    .catch( err => {
+      err = createError(404, err.message);
+      next(err);
+    });
 });
 
 lifepolicyRouter.put('/api/lifepolicy/:lifepolicyId', jsonParser, (req, res, next) => {
@@ -42,5 +48,8 @@ lifepolicyRouter.delete('/api/insured/:insuredId/lifepolicy/:lifepolicyId', (req
 
   Insured.findByIdAndRemoveLifePolicy(req.params.insuredId, req.params.lifepolicyId)
     .then( () => res.status(204).send())
-    .catch(next);
+    .catch( err => {
+      err = createError(404, err.message);
+      next(err);
+    });
 });

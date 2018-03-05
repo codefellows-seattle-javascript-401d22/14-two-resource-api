@@ -74,7 +74,7 @@ describe('Illustration Routes', function(){
             expect(res.body.death_benefit).toEqual(exampleIllustration.death_benefit);
             expect(res.body.lifepolicyId).toEqual(this.tempLifePolicy._id.toString());
             done();
-         });
+          });
       });
     });
     describe('with an invalid lifepolicy id and/or illustration', function(){

@@ -40,6 +40,8 @@ Insured.findByIdAndRemoveLifePolicy = function(insuredId, lifepolicyId){
       this.tempInsured = insured;
       let index = this.tempInsured.lifepolicies.indexOf(lifepolicyId);
       this.tempInsured.lifepolicies.splice(index, 1);
-      return this.tempInsured.save();
-    }).catch( err => Promise.reject(createError(404, err.message)));
+      this.tempInsured.save();
+      return LifePolicy.findByIdAndRemove(lifepolicyId);
+    })
+    .catch( err => Promise.reject(createError(404, err.message)));
 };
