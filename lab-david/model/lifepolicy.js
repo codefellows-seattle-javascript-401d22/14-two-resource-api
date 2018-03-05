@@ -26,9 +26,9 @@ LifePolicy.findByIdAndAddIllustration = function(id, illustration){
       this.tempLifePolicy = lifepolicy;
       return new Illustration(illustration).save();
     }).then( illustration => {
-      this.tempLifePolicy.illustration.push(illustration._id);
+      this.tempLifePolicy.illustrations.push(illustration._id);
       this.tempIllustration = illustration;
       return this.tempIllustration.save();
-    }).then( () => this.tempLifePolicy)
+    }).then( () => this.tempIllustration)
     .catch( err => Promise.reject(createError(404, err.message)));
 };

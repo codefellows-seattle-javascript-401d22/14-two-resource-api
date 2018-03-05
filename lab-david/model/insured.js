@@ -28,7 +28,7 @@ Insured.findByIdAndAddLifePolicy = function(id, lifepolicy){
       this.tempInsured.lifepolicies.push(lifepolicy._id);
       this.tempLifePolicy = lifepolicy;
       return this.tempLifePolicy.save();
-    }).then( () => this.tempInsured)
+    }).then( () => this.tempLifePolicy)
     .catch( err => Promise.reject(createError(404, err.message)));
 };
 

@@ -7,8 +7,9 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "test": "DEBUG='insurance*' jest" ,
+    "lint": "DEBUG='insurance*' eslint",
+    "start": "DEBUG='insurance*' node server.js"
   },
   "keywords": [],
   "author": "",
