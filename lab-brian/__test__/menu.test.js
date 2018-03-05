@@ -60,7 +60,7 @@ describe('Menu routes', function() {
 
   describe('GET: api/menu:menuID', function() {
     describe('With a valid body', function() {
-      beforeEach(done => {
+      beforeAll(done => {
         exampleMenu.timestamp = new Date();
         new Menu(exampleMenu).save()
           .then( menu => {
@@ -69,7 +69,7 @@ describe('Menu routes', function() {
           })
           .catch(done);
       });
-      afterEach(done => {
+      afterAll(done => {
         delete exampleMenu.timestamp;
         if(this.tempMenu) {
           Menu.remove({})
@@ -86,6 +86,16 @@ describe('Menu routes', function() {
             if(err) return done(err);
             expect(res.status).toEqual(200);
             expect(res.body.name).toEqual('example menu name');
+            done();
+          });
+      });
+
+      it('Should return all menus', done => {
+        request.get(`${url}/api/menu`)
+          .end((err, res) => {
+            if(err) return done(err);
+            expect(res.status).toEqual(200);
+            expect(res.body[0].name).toEqual('example menu name');
             done();
           });
       });
@@ -122,8 +132,105 @@ describe('Menu routes', function() {
         }
         done();
       });
+
+      it('Should update and return a menu', done => {
+        let updateMenu = {name: 'updated name'};
+        updateMenu.timestamp = '2018-03-01T09:37:08.000Z';
+        request.put(`${url}/api/menu/${this.tempMenu._id}`)
+          .send(updateMenu)
+          .end((err, res) => {
+            if (err) return done(err);
+            expect(res.status).toEqual(200);
+            expect(res.body._id).toEqual(this.tempMenu._id.toString());
+            for(var prop in updateMenu) {
+              expect(res.body[prop]).toEqual(updateMenu[prop]);
+            }
+            done();
+          });
+      });
+
+      it('should respond with a 404', done => {
+        let updateMenu = {name: 'updated name 404'};
+        updateMenu.timestamp = '2018-03-01T09:37:08.000Z';
+        request.put(`${url}/api/menu/404`)
+          .send(updateMenu)
+          .end((err, res) => {
+            expect(res.status).toEqual(404);
+            done();
+          });
+      });
+
+      it('should respond with a 400', done => {
+        request.put(`${url}/api/menu/${this.tempMenu._id}`)
+          .send( )
+          .end((err, res) => {
+            expect(res.status).toEqual(400);
+            done();
+          }); 
+      });
+
+      it('should respond with a 400', done => {
+        let updateMenu = {name: 'updated name'};
+        updateMenu.timestamp = '2018-03-01T09:37:08.000Z';
+        request.put(`${url}/api/menu`)
+          .send(updateMenu)
+          .end((err, res) => {
+            expect(res.status).toEqual(400);
+            done();
+          });
+      });
+
     });
   });
 
+  describe('DELETE: /api/menu/:menuID', function() {
+    describe('with a valid id', function() {
+      beforeEach( done => {
+        exampleMenu.timestamp = new Date();
+        new Menu(exampleMenu).save()
+          .then( menu => {
+            this.tempMenu = menu;
+            done();
+          })
+          .catch(done);
+      });
+
+      afterEach( done => {
+        delete exampleMenu.timestamp;
+        if(this.tempMenu) {
+          Menu.remove({})
+            .then( () => done())
+            .catch(done);
+          return;
+        }
+        done();
+      });
+
+      it('should delete a menu', done => {
+        request.delete(`${url}/api/menu/${this.tempMenu._id}`)
+          .end((err, res) => {
+            if(err) return done(err);
+            expect(res.status).toEqual(204);
+            done();
+          });
+      });
+
+      it('should not delete and return a 404 error', done => {
+        request.delete(`${url}/api/menu/404`)
+          .end((err, res) => {
+            expect(res.status).toEqual(404);
+            done();
+          });
+      });
+
+      it('should not delete and return a 400 error', done => {
+        request.delete(`${url}/api/menu`)
+          .end((err, res) => {
+            expect(res.status).toEqual(400);
+            done();
+          });
+      });
+    });
+  });
 
 });

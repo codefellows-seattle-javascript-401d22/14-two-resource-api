@@ -2,7 +2,7 @@
 
 ## Lab 14: Two Resource API
 
-I created an Express HTTP server to query a MongoDB and I utilized Express Router to create a route for doing restful crud operations against my MongoDB resource model.
+I created a 2 resource API utilizing Express and Mongoose to query a local MongoDB.
 
 ## Tech/frameworks/packages
 
