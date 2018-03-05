@@ -1,15 +1,15 @@
 {
   "name": "lab-brian",
   "version": "1.0.0",
-  "description": "## Lab 13: MongoDB",
+  "description": "## Lab 14: MongoDB",
   "main": "server.js",
   "directories": {
     "lib": "lib"
   },
   "scripts": {
-    "test": "DEBUG='food*' jest",
-    "test-coverage": "DEBUG='food*' jest --coverage",
-    "start": "DEBUG='food*' node server.js",
+    "test": "DEBUG='entree*' jest",
+    "test-coverage": "DEBUG='entree*' jest --coverage",
+    "start": "DEBUG='entree*' node server.js",
     "lint": "eslint ."
   },
   "keywords": [],
