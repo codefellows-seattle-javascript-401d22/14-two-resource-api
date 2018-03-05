@@ -1,6 +1,6 @@
 # Code Fellows: Code 401d22: Full-Stack JavaScript
 
-## Lab 13: MongoDB
+## Lab 14: Two Resource API
 
 I created an Express HTTP server to query a MongoDB and I utilized Express Router to create a route for doing restful crud operations against my MongoDB resource model.
 
