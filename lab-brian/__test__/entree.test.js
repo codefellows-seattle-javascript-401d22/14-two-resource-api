@@ -59,6 +59,15 @@ describe('Entree routes', function() {
             done();
           });
       });
+
+      it('Should return a 400 error', done => {
+        request.post(`${url}/api/menu/${this.tempMenu._id}/entree`)
+          .send()
+          .end((err, res) => {
+            expect(res.status).toEqual(400);
+            done();
+          });
+      });
     });
   });
 });

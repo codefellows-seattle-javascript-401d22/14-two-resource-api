@@ -45,6 +45,16 @@ describe('Menu routes', function() {
             done();
           });
       });
+
+      it('should return a 400 error', done => {
+        request.post(`${url}/api/menu`)
+          .send()
+          .end((err, res) => {
+            expect(res.status).toEqual(400);
+            done();
+          });
+      });
+
     });
   });
 
@@ -79,7 +89,41 @@ describe('Menu routes', function() {
             done();
           });
       });
+
+      it('should return a 404 error', done => {
+        request.get(`${url}/api/menu/a979e472c577c679758e018`)
+          .end((err, res) => {
+            expect(res.status).toEqual(404);
+            done();
+          });
+      });
+
     });
   });
+
+  describe('PUT: /api/menu/:menuID', function() {
+    describe('with a valid id and request body', function() {
+      beforeEach(done => {
+        exampleMenu.timestamp = new Date();
+        new Menu(exampleMenu).save()
+          .then( menu => {
+            this.tempMenu = menu;
+            done();
+          })
+          .catch(done);
+      });
+      afterEach(done => {
+        delete exampleMenu.timestamp;
+        if(this.tempMenu) {
+          Menu.remove({})
+            .then( () => done())
+            .catch(done);
+          return;
+        }
+        done();
+      });
+    });
+  });
+
 
 });

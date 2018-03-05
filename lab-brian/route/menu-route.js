@@ -14,7 +14,20 @@ menuRouter.get('/api/menu/:menuID', function(req, res, next) {
   Menu.findById(req.params.menuID)
     .populate('entrees')
     .then( menu => res.json(menu))
-    .catch(next);
+    .catch( err => {
+      err = createError(404, 'Not Found');
+      next(err);
+    });
+});
+
+// http :3000/api/menu
+menuRouter.get('/api/menu', function(req, res, next) {
+  debug('GET: /api/menu');
+
+  Menu.find()
+    .populate('entrees')
+    .then( menu => res.json(menu))
+    .catch( err => next(err));
 });
 
 // http POST :3000/api/menu name=brunch
