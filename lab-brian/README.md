@@ -2,7 +2,7 @@
 
 ## Lab 14: Two Resource API
 
-I created an Express HTTP server to query a MongoDB and I utilized Express Router to create a route for doing restful crud operations against my MongoDB resource model.
+I created a 2 resource API utilizing Express and Mongoose to query a local MongoDB.
 
 ## Tech/frameworks/packages
 
@@ -34,33 +34,38 @@ Make POST/GET/DELETE/PUT requests to the server and your local MongoDB.
 
 ## Routes
 
-#### `POST /api/food`
+#### `POST /api/menu && /api/menu/<menu id>/entree`
 
 Create a new file with a JSON food object with the properties `price` and `name`.
 
 ```
-http POST :3000/api/food name=Pizza price=19.95
+http POST :3000/api/menu name=brunch
+http POST :3000/api/menu/<menu id>/entree name=pancakes price=12
 ```
 
 Throws an error if any of the requested properties are missing.
 
 
-#### `GET /api/food/<food id>`
+#### `GET /api/menu/<menu id>`
 
-Retrieves a JSON food object with the properties `price` and `name` from your MongoDB as requested by the <food id>.
-
-```
-http :3000/api/food/<food id>
-```
-
-Throws an error if the request parameter (id) is missing.
-
-#### `DELETE /api/food/<food id>`
-
-Deletes a specific food as requested by the <food id>.
+Retrieves a JSON menu object with the properties `timestamp`, `entrees` and `name` from your MongoDB as requested by the <menu id>.
 
 ```
-http DELETE :3000/api/food/<food id>
+http :3000/api/menu/<menu id>
+```
+
+Retrieves all menus if the request parameter (id) is missing.
+
+```
+http :3000/api/menu
+```
+
+#### `DELETE /api/menu/<menu id>`
+
+Deletes a specific menu as requested by the <menu id>.
+
+```
+http DELETE :3000/api/menu/<menu id>
 ```
 
 If successful, a 204 status is returned.
@@ -68,15 +73,19 @@ If successful, a 204 status is returned.
 Throws an error if the request parameter (id) is missing.
 
 
-#### `PUT /api/food/<food id>`
+#### `PUT /api/menu/<menu id>`
 
-Updates a JSON food object with the properties `price` and `name` from your MongoDB as requested by the <food id>.
+Updates a JSON menu object with the properties `timestamp`, `entrees` and `name` from your MongoDB as requested by the <menu id>.
 
-If successful, the food is returned with a 200 status.
+```
+http PUT :3000/api/menu/<menu id> name=dinner
+```
 
-If a request is made with a food id that is not found, a 404 status is returned.
+If successful, the menu is returned with a 200 status.
 
-If a request is made with no food id a 400 status is returned.
+If a request is made with a menu id that is not found, a 404 status is returned.
+
+If a request is made with no menu id a 400 status is returned.
 
 ## Tests
 
@@ -84,14 +93,14 @@ run `jest` to check tests.
 
 #### POST
 
-1. should return the food object and a 200 status code if there is no error.
+1. should return the menu object and a 200 status code if there is no error.
 2. should respond with a 400 status code if there is no request body.
 
 #### GET
 
-1. should return the food object and a 200 status code if there is no error.
+1. should return the menu object and a 200 status code if there is no error.
 2. should respond with a 404 status code if a request is made with an id that is not found.
-3. should respond with a 200 status code and all foods if there is no parameter (id).
+3. should respond with a 200 status code and all menus if there is no parameter (id).
 
 #### DELETE
 
@@ -101,7 +110,7 @@ run `jest` to check tests.
 
 #### PUT
 
-1. should update and return the updated food object along with a 200 status code if there is no error.
+1. should update and return the updated menu object along with a 200 status code if there is no error.
 2. should respond with a 400 status code if there is no parameter (id).
 3. should respond with a 404 status code if a request is made with an id that is not found.
 

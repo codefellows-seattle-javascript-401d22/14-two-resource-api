@@ -68,6 +68,16 @@ describe('Entree routes', function() {
             done();
           });
       });
+
+      it('Should return a 404 error', done => {
+        request.post(`${url}/api/menu/a979e472c577c679758e018/entree`)
+          .send(exampleEntree)
+          .end((err, res) => {
+            expect(res.status).toEqual(404);
+            done();
+          });
+      });
+
     });
   });
 });

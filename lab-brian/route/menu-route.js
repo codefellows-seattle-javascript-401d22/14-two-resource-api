@@ -26,13 +26,14 @@ menuRouter.get('/api/menu', function(req, res, next) {
 
   Menu.find()
     .populate('entrees')
-    .then( menu => res.json(menu))
+    .then( menus => res.json(menus))
     .catch( err => next(err));
 });
 
 // http POST :3000/api/menu name=brunch
 menuRouter.post('/api/menu', jsonParser, function(req, res, next) {
   debug('POST: /api/menu');
+  if (!req.body.name) return next(createError(400, 'expected a request body name'));
 
   req.body.timestamp = new Date();
   new Menu(req.body).save()
@@ -43,6 +44,7 @@ menuRouter.post('/api/menu', jsonParser, function(req, res, next) {
 // http PUT :3000/api/menu/5a9ced3a6707472fa2474206 name=dinner
 menuRouter.put('/api/menu/:menuID', jsonParser, function(req, res, next) {
   debug('PUT: /api/menu:menuID');
+  if (!req.body.name) return next(createError(400, 'expected a request body name'));
 
   Menu.findByIdAndUpdate(req.params.menuID, req.body, {new: true})
     .then( menu => res.json(menu))
@@ -52,6 +54,12 @@ menuRouter.put('/api/menu/:menuID', jsonParser, function(req, res, next) {
     });
 });
 
+// http PUT :3000/api/menu name=lunch
+menuRouter.put('/api/menu', function(req, res, next) {
+  debug('PUT: /api/menu');
+  return next(createError(400, 'expected menuID'));
+});
+
 // http DELETE :3000/api/menu/5a9cedc56707472fa2474207
 menuRouter.delete('/api/menu/:menuID', function(req, res, next) {
   debug('DELETE /api/menu:menuID');
@@ -59,4 +67,10 @@ menuRouter.delete('/api/menu/:menuID', function(req, res, next) {
   Menu.findByIdAndRemove(req.params.menuID)
     .then( () => res.status(204).send())
     .catch( err => next(createError(404, err.message)));
+});
+
+// http DELETE :3000/api/menu
+menuRouter.delete('/api/menu', function(req, res, next) {
+  debug('DELETE: /api/menu');
+  return next(createError(400, 'expected menuID'));
 });
