@@ -3,8 +3,9 @@
 const superagent = require('superagent');
 const Doggo = require('../model/doggo.js');
 const PORT = process.env.PORT || 3000;
+const serverToggle = require('../lib/server-toggle.js');
+const server = require('../server.js');
 
-require('../server.js');
 require('jest');
 
 const url = `http://localhost:${PORT}`;
@@ -13,6 +14,7 @@ describe('Doggo Routes', function() {
   this.doggo = undefined;
 
   beforeAll( done => {
+    serverToggle.serverOn(server, done);
     new Doggo({name: 'Chloe', age: 4}).save()
       .then( myDoggo => {
         this.doggo = myDoggo;
@@ -22,6 +24,7 @@ describe('Doggo Routes', function() {
   });
 
   afterAll( done => {
+    serverToggle.serverOff(server, done);
     Doggo.remove({})
       .then( () => done())
       .catch(done);
@@ -47,7 +50,7 @@ describe('Doggo Routes', function() {
         .send({ name: 'Chlo' })
         .end((err, res) => {
           expect(res.status).toEqual(400);
-          expect(res.text).toEqual('Bad Request');
+          expect(res.text).toEqual('BadRequestError');
           done();
         });
     });
@@ -69,7 +72,7 @@ describe('Doggo Routes', function() {
       superagent.get(`${url}/api/doggo/41224d776a326fb40f000001`)
         .end((err, res) => {
           expect(res.status).toEqual(404);
-          expect(res.text).toEqual('Not Found');
+          expect(res.text).toEqual('NotFoundError');
           done();
         });
     });
@@ -93,7 +96,7 @@ describe('Doggo Routes', function() {
         .send({})
         .end((err, res) => {
           expect(res.status).toEqual(400);
-          expect(res.text).toEqual('Bad Request');
+          expect(res.text).toEqual('BadRequestError');
           done();
         });
     });
@@ -103,7 +106,7 @@ describe('Doggo Routes', function() {
         .send({name: 'Chlo', age: 99})
         .end((err, res) => {
           expect(res.status).toEqual(404);
-          expect(res.text).toEqual('Not Found');
+          expect(res.text).toEqual('NotFoundError');
           done();
         });
     });
@@ -125,7 +128,6 @@ describe('Doggo Routes', function() {
       superagent.get(`${url}/api/not-a-thing`)
         .end((err, res) => {
           expect(res.status).toEqual(404);
-          expect(res.text).toEqual('Not Found');
           done();
         });
     });
