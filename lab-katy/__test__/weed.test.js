@@ -57,7 +57,7 @@ describe('Weed Routes', function() {
       //next: all properties that come back with repsonse
       //GO SUPER HAM check typeof thing, other methods like deep properties and types of data you're looking at
 
-      it.only('should return weed', done => {
+      it('should return weed', done => {
         request.post(`${url}/api/list/${this.tempList._id}/weed`)
           .send(exampleWeed)
           .end((err, res) => {
