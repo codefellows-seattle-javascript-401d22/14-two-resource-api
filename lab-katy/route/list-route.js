@@ -12,8 +12,7 @@ const listRouter = module.exports = new Router();
 
 listRouter.get('/api/list/:listId', function(req, res, next) {
   debug('GET: /api/list/:listId');
-
-  // mongoose method - go to our list collection with this id, grab that list and return it to me
+  
   List.findById(req.params.listId)
     .populate('weedz')
     .then( list => res.json(list))

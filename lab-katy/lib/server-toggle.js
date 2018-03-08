@@ -7,7 +7,7 @@ module.exports = exports = {};
 
 exports.serverOn = function(server, done) {
   if(!server.isRunning) {
-    server.listen(process.env.PORT, () => { ///may need to change server to 3000
+    server.listen(process.env.PORT, () => { 
       server.isRunning = true;
       debug('server up!');
       done();

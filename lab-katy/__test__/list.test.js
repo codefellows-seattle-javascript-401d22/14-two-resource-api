@@ -3,7 +3,6 @@
 const request = require('superagent');
 const List = require('../model/list.js');
 const PORT = process.env.PORT || 3000;
-// const mongoose = require('mongoose');
 const serverToggle = require('../lib/server-toggle.js');
 const server = require('../server.js');
 
@@ -29,7 +28,8 @@ describe('List Routes', function() {
     describe('with a valid request body', function() {
       afterEach( done => {
         if(this.tempList) {
-          List.remove({}) //removes EVERYTHING. this is fine for today but  NOT if you're actually working with a filled database
+          //removes EVERYTHING. this is fine for today but  NOT if you're actually working with a filled database
+          List.remove({}) 
             .then( () => done())
             .catch(done);
           return;
