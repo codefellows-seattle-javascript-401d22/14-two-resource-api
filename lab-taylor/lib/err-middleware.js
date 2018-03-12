@@ -6,10 +6,14 @@ const debug = require('debug')('beer:errors');
 module.exports = function(err, req, res, next) {
   debug('error middleware');
 
-  console.error('msg', err.message);
-  console.error('name', err.name);
-
   if(err.status) {
+    res.status(err.status).send(err.name);
+    next();
+    return;
+  }
+
+  if(err.message.includes('ObjectId failed')) {
+    err = createError(404, 'Not Found');
     res.status(err.status).send(err.name);
     next();
     return;
@@ -26,3 +30,4 @@ module.exports = function(err, req, res, next) {
   res.status(err.status).send(err.name);
   next();
 };
+
