@@ -1,6 +1,6 @@
 'use strict';
 
-const debug = require('debug')('note:server-toggle');
+const debug = require('debug')('car:server-toggle');
 
 module.exports = exports = {};
 
