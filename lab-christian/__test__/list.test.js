@@ -24,8 +24,8 @@ describe('List Routes', function() {
     serverToggle.serverOff(server, done);
   });
 
-  describe('POST: /api/list', function() {
-    describe('with a valid request body', function() {
+  describe('POST: /api/list', () => {
+    describe('with a valid request body', () => {
       afterEach( done => {
         if (this.tempList) {
           List.remove({})
@@ -44,6 +44,15 @@ describe('List Routes', function() {
             expect(res.status).toEqual(200);
             expect(res.body.name).toEqual('test list name');
             this.tempList = res.body;
+            done();
+          });
+      });
+
+      it('should return a 400 error', done => {
+        request.post(`${url}/api/list`)
+          .send()
+          .end((err, res) => {
+            expect(res.status).toEqual(400);
             done();
           });
       });
@@ -87,7 +96,6 @@ describe('List Routes', function() {
       it('should return with a 404', done => {
         request.get(`${url}/api/list/123123123`)
           .end((err, res) => {
-            //if (err) return done(err);
             expect(res.status).toEqual(404);
             done();
           });
@@ -130,12 +138,11 @@ describe('List Routes', function() {
       });
     });
     
-    describe('with no request body provied', () => {
+    describe('with no request body provided', () => {
       it('should return a 400 error', done => {
         request.put(`${url}/api/list/${this.tempList._id}`)
-          .send({})
+          .send()
           .end((err, res) => {
-            // if (err) return done(err);
             expect(res.status).toEqual(400);
             done();
           });
@@ -147,8 +154,7 @@ describe('List Routes', function() {
         request.put(`${url}/api/list/asdqwrqwe`)
           .send(exampleList)
           .end((err, res) => {
-            // if (err) return done(err);
-            expect(res.status).toEqual(400);
+            expect(res.status).toEqual(404);
             done();
           });
       });
