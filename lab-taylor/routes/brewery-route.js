@@ -10,6 +10,8 @@ const breweryRouter = module.exports = new Router();
 breweryRouter.get('/api/brewery/:breweryId', function(req, res, next) {
   debug('GET: /api/brewery/breweryId');
 
+  if(!req.params.breweryId) return createError(400, 'Bad Request');
+
   Brewery.findById(req.params.breweryId)
     .populate('beers')
     .then( brewery => res.json(brewery))
@@ -27,6 +29,10 @@ breweryRouter.post('/api/brewery', jsonParser, function(req, res, next) {
 
 breweryRouter.put('/api/brewery/:breweryId', jsonParser, function(req, res, next) {
   debug('PUT: /api/brewey/breweryId');
+
+  if(!req.body.name) {
+    return next(createError(400, 'Bad Request'));
+  }
 
   Brewery.findByIdAndUpdate(req.params.breweryId, req.body, { new: true})
     .then( brewery => res.json(brewery))
