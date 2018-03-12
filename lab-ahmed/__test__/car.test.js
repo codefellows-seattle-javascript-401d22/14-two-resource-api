@@ -2,7 +2,7 @@
 
 const request = require('superagent');
 const List = require('../model/list.js');
-const Note = require('../model/note.js');
+const Car = require('../model/car.js');
 const serverToggle = require('../lib/server-toggle.js');
 const server = require('../server.js');
 const PORT = process.env.PORT || 3000;
@@ -11,9 +11,9 @@ require('jest');
 
 const url = `http://localhost:${PORT}`;
 
-const exampleNote = {
-  name: 'test note',
-  content: 'test note content',
+const exampleCar = {
+  name: 'test car',
+  content: 'test car content',
 };
 
 const exampleList = {
@@ -21,17 +21,16 @@ const exampleList = {
   timestamp: new Date(),
 };
 
-describe('Note Routes', function() {
+describe('Car Routes', function() {
   beforeAll( done => {
     serverToggle.serverOn(server, done);
   });
-
   afterAll( done => {
     serverToggle.serverOff(server, done);
   });
 
-  describe('POST: /api/list/:listID/note', function() {
-    describe('with a valid list id and note body', () => {
+  describe('POST: /api/list/:listId/car', function() {
+    describe('with a valid list id and car body', () => {
       beforeEach( done => {
         new List(exampleList).save()
           .then( list => {
@@ -40,23 +39,33 @@ describe('Note Routes', function() {
           })
           .catch(done);
       });
-
       afterEach( done => {
         Promise.all([
           List.remove({}),
-          Note.remove({}),
+          Car.remove({}),
         ])
           .then( () => done())
           .catch(done);
       });
-
-      it('should return a note', done => {
-        request.post(`${url}/api/list/${this.tempList._id}/note`)
-          .send(exampleNote)
+      it('should return a car', done => {
+        request.post(`${url}/api/list/${this.tempList._id}/car`)
+          .send(exampleCar)
           .end((err, res) => {
             if (err) return done(err);
-            expect(res.body.name).toEqual(exampleNote.name);
+            expect(res.status).toEqual(200);
+            expect(res.body.name).toEqual(exampleCar.name);
             expect(res.body.listID).toEqual(this.tempList._id.toString());
+            done();
+          });
+      });
+    });
+    describe('without a valid list id', () => {
+      it('should return a 404 error', done => {
+        request.post(`${url}/api/list/12345/car`)
+          .send(exampleCar)
+          .end((err, res) => {
+            expect(res.status).toEqual(404);
+            expect(res.body.text).toEqual();
             done();
           });
       });

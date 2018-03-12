@@ -1,35 +1,35 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const debug = require('debug')('note:list');
+const debug = require('debug')('car:list');
 const createError = require('http-errors');
 const Schema = mongoose.Schema;
-const Note = require('./note.js');
+const Car = require('./car.js');
 
 const listSchema = Schema({
   name: { type: String, required: true },
   timestamp: { type: Date, required: true },
-  notes: [{ type: Schema.Types.ObjectId, ref: 'note' }],
+  cars: [{ type: Schema.Types.ObjectId, ref: 'car' }],
 });
 
 const List = module.exports = mongoose.model('list', listSchema);
 
-List.findByIdAndAddNote = function(id, note) {
-  debug('findByIdAndAddNote');
+List.findByIdAndAddCar = function(id, car) {
+  debug('findByIdAndAddCar');
 
   return List.findById(id)
     .catch( err => Promise.reject(createError(404, err.message)))
     .then( list => {
-      note.listID = list._id;
+      car.listID = list._id;
       this.tempList = list;
-      return new Note(note).save();
+      return new Car(car).save();
     })
-    .then( note => {
-      this.tempList.notes.push(note._id);
-      this.tempNote = note;
+    .then( car => {
+      this.tempList.cars.push(car._id);
+      this.tempCar = car;
       return this.tempList.save();
     })
     .then( () => {
-      return this.tempNote;
+      return this.tempCar;
     });
 };
