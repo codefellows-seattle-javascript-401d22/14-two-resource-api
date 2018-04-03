@@ -22,7 +22,7 @@ exports.serverOff = function(server, done) {
     server.close( err => {
       if (err) return done(err);
       server.isRunning = false;
-      mongoose.connection.close()
+      mongoose.connection.close();
       debug('server off');
       done();
     });

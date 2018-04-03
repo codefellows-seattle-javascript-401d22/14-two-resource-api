@@ -1,5 +1,6 @@
 'use strict';
 
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
@@ -10,10 +11,9 @@ const recipeRouter = require('./router/recipe-router.js');
 const errors = require('./lib/error-middleware.js');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-const MONGODB_URI = 'mongodb://localhost/recipesdb';
+const PORT = process.env.PORT;
 
-mongoose.connect(MONGODB_URI);
+mongoose.connect(process.env.MONGODB_URI);
 
 app.use(cors());
 app.use(morgan('dev'));
